@@ -77,10 +77,7 @@ function ResetBoard(height, width)
 }
 
 function DoGeneration()
-{
-    //var status = $("#status");
-    //status.addClass("red");
-    
+{  
     // Calculate next state for each cell
     $(".cell").each(function ()
     {
@@ -106,8 +103,6 @@ function DoGeneration()
     var gen = $("#generation");
     var num = parseInt(gen.val());
     gen.val(++num);
-
-    //status.removeClass("red");
 }
 
 function DetermineNextCellState(cell)
