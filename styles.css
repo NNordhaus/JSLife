@@ -1,0 +1,5 @@
+﻿
+.cell, #status { height: 20px; width: 20px }
+.dead{ background-color: white;}
+.alive{ background-color: black;}
+.red{ background-color: red;}
