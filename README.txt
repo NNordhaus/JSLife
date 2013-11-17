@@ -1,5 +1,7 @@
 Expirimental implementation of "Conway's Game of Life", in JavaScript.
 
+You can view this in a JSFiddle here: http://jsfiddle.net/JPdrp/
+
 Why the game of life?  
 
   It is a failry simple concept to start with, but can lead to many types of expirimentation.
