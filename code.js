@@ -1,6 +1,4 @@
-﻿/// <reference path="Scripts/jquery-1.7.1-vsdoc.js" />
-
-var intervalRef;
+﻿var intervalRef;
 var Height;
 var Width;
 
@@ -8,7 +6,7 @@ $(document).ready(function ()
 {
     ResetBoard(35, 60);
 
-    $("#start").click(function ()
+    $("#start").on('click', function ()
     {
         DoGeneration();
 
@@ -19,17 +17,17 @@ $(document).ready(function ()
         400);
     });
 
-    $("#stop").click(function ()
+    $("#stop").on('click', function ()
     {
         clearInterval(intervalRef);
     });
 
-    $("#reset").click(function ()
+    $("#reset").on('click', function ()
     {
         ResetBoard(Height, Width);
     });
 
-    $(".cell").live('click', function ()
+    $(document).on('click', ".cell", function ()
     {
         // manually toggle the cell state
         if ($(this).hasClass('alive'))
