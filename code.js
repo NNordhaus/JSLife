@@ -14,7 +14,7 @@ $(document).ready(function ()
         {
             DoGeneration();
         },
-        400);
+        150);
     });
 
     $("#stop").on('click', function ()
@@ -30,16 +30,7 @@ $(document).ready(function ()
     $(document).on('click', ".cell", function ()
     {
         // manually toggle the cell state
-        if ($(this).hasClass('alive'))
-        {
-            $(this).removeClass('alive');
-            $(this).addClass('dead');
-        }
-        else
-        {
-            $(this).removeClass('dead');
-            $(this).addClass('alive');
-        }
+        $(this).toggleClass("dead alive");
     });
 });
 
@@ -85,16 +76,8 @@ function DoGeneration()
     // Set each cell to next state
     $(".cell").each(function ()
     {
-        if (this.NextState == 'dead')
-        {
-            $(this).removeClass('alive');
-            $(this).addClass('dead');
-        }
-        else
-        {
-            $(this).removeClass('dead');
-            $(this).addClass('alive');
-        }
+        $(this).removeClass('alive dead');
+        $(this).addClass(this.NextState);
     });
 
     // Increment generation
