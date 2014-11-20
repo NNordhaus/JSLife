@@ -48,7 +48,7 @@ function ResetBoard(height, width)
         {
             html += '<td id="c' + row + '_' + col + '" class="cell ';
             random = Math.floor(Math.random() * 10);
-            if (random < 4)
+            if (random < 5)
             {
                 html += 'dead';
             }
@@ -75,6 +75,7 @@ function DoGeneration()
 
     // Set each cell to next state
     var aliveCells = 0;
+    var boardHashInput = "";
     $(".cell").each(function ()
     {
         $(this).removeClass('alive dead');
@@ -82,6 +83,11 @@ function DoGeneration()
         if(this.NextState == 'alive')
         {
             aliveCells++;
+            boardHashInput += "1";
+        }
+        else
+        {
+            boardHashInput += "0";
         }
     });
 
@@ -92,6 +98,11 @@ function DoGeneration()
         $("#status").html('All cells dead, stopped doing generations');
         return;
     }
+
+    var boardHash = boardHashInput.hashCode();
+    $("#status").html(boardHash);
+    // Check against previous hashes
+
 
     // Increment generation
     var gen = $("#generation");
@@ -161,3 +172,15 @@ function DetermineNextCellState(cell)
         }
     }
 }
+
+// Hash function to help compare board states
+String.prototype.hashCode = function () {
+    var hash = 0, i, chr, len;
+    if (this.length == 0) return hash;
+    for (i = 0, len = this.length; i < len; i++) {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
