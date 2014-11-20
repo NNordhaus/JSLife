@@ -79,7 +79,6 @@ function DoGeneration()
     });
 
     // Set each cell to next state
-    var aliveCells = 0;
     var boardHashInput = "";
     $(".cell").each(function ()
     {
@@ -87,7 +86,6 @@ function DoGeneration()
         $(this).addClass(this.NextState);
         if(this.NextState == 'alive')
         {
-            aliveCells++;
             boardHashInput += "1";
         }
         else
@@ -96,18 +94,21 @@ function DoGeneration()
         }
     });
 
+    var boardHash = boardHashInput.hashCode();
+    $("#status").html(boardHash);
+
     // Check to see if the board is dead
-    if (aliveCells == 0)
+    if (boardHash == -223798272)
     {
         clearInterval(intervalRef);
         $("#status").html('All cells dead, stopped doing generations');
         return;
-    }
+    } 
 
-    var boardHash = boardHashInput.hashCode();
-    $("#status").html(boardHash);
+    // Add hash to the stack
+
     // Check against previous hashes
-
+    // check for 1-2-1-2 pattern
 
     // Increment generation
     var gen = $("#generation");
