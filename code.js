@@ -27,6 +27,11 @@ $(document).ready(function ()
         ResetBoard(Height, Width);
     });
 
+    $("#clear").on('click', function ()
+    {
+        $(".cell").removeClass('alive dead').addClass('dead');
+    });
+
     $(document).on('click', ".cell", function ()
     {
         // manually toggle the cell state
