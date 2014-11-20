@@ -74,11 +74,24 @@ function DoGeneration()
     });
 
     // Set each cell to next state
+    var aliveCells = 0;
     $(".cell").each(function ()
     {
         $(this).removeClass('alive dead');
         $(this).addClass(this.NextState);
+        if(this.NextState == 'alive')
+        {
+            aliveCells++;
+        }
     });
+
+    // Check to see if the board is dead
+    if (aliveCells == 0)
+    {
+        clearInterval(intervalRef);
+        $("#status").html('All cells dead, stopped doing generations');
+        return;
+    }
 
     // Increment generation
     var gen = $("#generation");
@@ -97,6 +110,7 @@ function DetermineNextCellState(cell)
     // Determine the row and column indexes we will be working with
     var rowIndexes = [row - 1, row, row + 1];
     var colIndexes = [col - 1, col, col + 1];
+    // Wrap around cells
     if (row == 0)
     {
         rowIndexes[0] = Height - 1;

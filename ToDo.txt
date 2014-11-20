@@ -1,0 +1,4 @@
+﻿
+- Determine stable state, or all cells dead, to prevent going on forever.
+
+- Make the dead/alive count params configurable.
