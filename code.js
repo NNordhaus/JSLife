@@ -1,10 +1,13 @@
 ﻿var intervalRef;
 var Height;
 var Width;
+var deadBoardHash;
+var hashHistory;
 
 $(document).ready(function ()
 {
-    ResetBoard(35, 60);
+    hashHistory = [];
+    ResetBoard(100, 160);
 
     $("#start").on('click', function ()
     {
@@ -14,7 +17,7 @@ $(document).ready(function ()
         {
             DoGeneration();
         },
-        150);
+        120);
     });
 
     $("#stop").on('click', function ()
@@ -43,6 +46,8 @@ function ResetBoard(height, width)
 {
     Height = height;
     Width = width;
+    var currentBoardHasInput = "";
+    var deadBoardHashInput = "";
 
     var html = "";
     var random = 0;
@@ -53,19 +58,30 @@ function ResetBoard(height, width)
         {
             html += '<td id="c' + row + '_' + col + '" class="cell ';
             random = Math.floor(Math.random() * 10);
-            if (random < 5)
+            if (random < 6)
             {
                 html += 'dead';
+                currentBoardHasInput += "0";
             }
             else
             {
                 html += 'alive';
+                currentBoardHasInput += "1";
             }
             
             html += '"></td>';
+
+            deadBoardHashInput += "0";
         }
         html += "</tr>";
     }
+    deadBoardHash = deadBoardHashInput.hashCode();
+
+    // Add hash to the stack
+    var boardHash = currentBoardHasInput.hashCode();
+    hashHistory.push(boardHash);
+    $("#status").html(boardHash);
+
     $("#board").html(html);
     $("#generation").val("0");
 }
@@ -98,7 +114,7 @@ function DoGeneration()
     $("#status").html(boardHash);
 
     // Check to see if the board is dead
-    if (boardHash == -223798272)
+    if (boardHash == deadBoardHash)
     {
         clearInterval(intervalRef);
         $("#status").html('All cells dead, stopped doing generations');
@@ -106,9 +122,22 @@ function DoGeneration()
     } 
 
     // Add hash to the stack
+    hashHistory.push(boardHash);
 
-    // Check against previous hashes
-    // check for 1-2-1-2 pattern
+    // Check for 1-2-1-2 pattern
+    if (hashHistory.length > 3)
+    {
+        if(hashHistory[0] == hashHistory[2]
+            && hashHistory[1] == hashHistory[3])
+        {
+            clearInterval(intervalRef);
+            $("#status").html('Stable 2 cycle state detected.');
+        }
+        while(hashHistory.length > 4)
+        {
+            hashHistory.shift();
+        }
+    }
 
     // Increment generation
     var gen = $("#generation");
@@ -172,7 +201,8 @@ function DetermineNextCellState(cell)
     else
     {
         cell.NextState = 'dead';
-        if (neighbors == 3 || neighbors == 6 || neighbors == 5)
+        //if (neighbors == 3 || neighbors == 6 || neighbors == 5) // "high life" version of life
+        if (neighbors == 3)
         {
             cell.NextState = 'alive';
         }
@@ -180,7 +210,8 @@ function DetermineNextCellState(cell)
 }
 
 // Hash function to help compare board states
-String.prototype.hashCode = function () {
+String.prototype.hashCode = function ()
+{
     var hash = 0, i, chr, len;
     if (this.length == 0) return hash;
     for (i = 0, len = this.length; i < len; i++) {
