@@ -1,10 +1,13 @@
 ﻿var intervalRef;
 var Height;
 var Width;
+var deadBoardHash;
+var hashHistory;
 
 $(document).ready(function ()
 {
-    ResetBoard(35, 60);
+    hashHistory = [];
+    ResetBoard(100, 160);
 
     $("#start").on('click', function ()
     {
@@ -14,7 +17,7 @@ $(document).ready(function ()
         {
             DoGeneration();
         },
-        150);
+        120);
     });
 
     $("#stop").on('click', function ()
@@ -25,6 +28,11 @@ $(document).ready(function ()
     $("#reset").on('click', function ()
     {
         ResetBoard(Height, Width);
+    });
+
+    $("#clear").on('click', function ()
+    {
+        $(".cell").removeClass('alive dead').addClass('dead');
     });
 
     $(document).on('click', ".cell", function ()
@@ -38,6 +46,8 @@ function ResetBoard(height, width)
 {
     Height = height;
     Width = width;
+    var currentBoardHasInput = "";
+    var deadBoardHashInput = "";
 
     var html = "";
     var random = 0;
@@ -48,19 +58,30 @@ function ResetBoard(height, width)
         {
             html += '<td id="c' + row + '_' + col + '" class="cell ';
             random = Math.floor(Math.random() * 10);
-            if (random < 4)
+            if (random < 6)
             {
                 html += 'dead';
+                currentBoardHasInput += "0";
             }
             else
             {
                 html += 'alive';
+                currentBoardHasInput += "1";
             }
             
             html += '"></td>';
+
+            deadBoardHashInput += "0";
         }
         html += "</tr>";
     }
+    deadBoardHash = deadBoardHashInput.hashCode();
+
+    // Add hash to the stack
+    var boardHash = currentBoardHasInput.hashCode();
+    hashHistory.push(boardHash);
+    $("#status").html(boardHash);
+
     $("#board").html(html);
     $("#generation").val("0");
 }
@@ -74,23 +95,48 @@ function DoGeneration()
     });
 
     // Set each cell to next state
-    var aliveCells = 0;
+    var boardHashInput = "";
     $(".cell").each(function ()
     {
         $(this).removeClass('alive dead');
         $(this).addClass(this.NextState);
         if(this.NextState == 'alive')
         {
-            aliveCells++;
+            boardHashInput += "1";
+        }
+        else
+        {
+            boardHashInput += "0";
         }
     });
 
+    var boardHash = boardHashInput.hashCode();
+    $("#status").html(boardHash);
+
     // Check to see if the board is dead
-    if (aliveCells == 0)
+    if (boardHash == deadBoardHash)
     {
         clearInterval(intervalRef);
         $("#status").html('All cells dead, stopped doing generations');
         return;
+    } 
+
+    // Add hash to the stack
+    hashHistory.push(boardHash);
+
+    // Check for 1-2-1-2 pattern
+    if (hashHistory.length > 3)
+    {
+        if(hashHistory[0] == hashHistory[2]
+            && hashHistory[1] == hashHistory[3])
+        {
+            clearInterval(intervalRef);
+            $("#status").html('Stable 2 cycle state detected.');
+        }
+        while(hashHistory.length > 4)
+        {
+            hashHistory.shift();
+        }
     }
 
     // Increment generation
@@ -155,9 +201,23 @@ function DetermineNextCellState(cell)
     else
     {
         cell.NextState = 'dead';
-        if (neighbors == 3 || neighbors == 6 || neighbors == 5)
+        //if (neighbors == 3 || neighbors == 6 || neighbors == 5) // "high life" version of life
+        if (neighbors == 3)
         {
             cell.NextState = 'alive';
         }
     }
 }
+
+// Hash function to help compare board states
+String.prototype.hashCode = function ()
+{
+    var hash = 0, i, chr, len;
+    if (this.length == 0) return hash;
+    for (i = 0, len = this.length; i < len; i++) {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
