@@ -190,7 +190,7 @@ function DetermineNextCellState(cell)
         }
     }
 
-    if ($(this).hasClass("alive"))
+    if ($(cell).hasClass("alive"))
     {
         cell.NextState = 'alive';
         if (neighbors < 2 || neighbors > 3)
