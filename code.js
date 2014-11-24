@@ -20,6 +20,11 @@ $(document).ready(function ()
         120);
     });
 
+    $("#singleGen").on('click', function ()
+    {
+        DoGeneration();
+    });
+
     $("#stop").on('click', function ()
     {
         clearInterval(intervalRef);
