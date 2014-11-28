@@ -58,7 +58,7 @@ function ResetBoard(height, width)
         {
             html += '<td id="c' + row + '_' + col + '" class="cell ';
             random = Math.floor(Math.random() * 10);
-            if (random < 6)
+            if (random < 7)
             {
                 html += 'dead';
                 currentBoardHasInput += "0";
