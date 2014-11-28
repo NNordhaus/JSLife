@@ -7,7 +7,7 @@ var hashHistory;
 $(document).ready(function ()
 {
     hashHistory = [];
-    ResetBoard(100, 160);
+    ResetBoard(120, 180);
 
     $("#start").on('click', function ()
     {
