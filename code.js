@@ -7,7 +7,7 @@ var hashHistory;
 $(document).ready(function ()
 {
     hashHistory = [];
-    ResetBoard(100, 160);
+    ResetBoard(120, 180);
 
     $("#start").on('click', function ()
     {
@@ -18,6 +18,11 @@ $(document).ready(function ()
             DoGeneration();
         },
         120);
+    });
+
+    $("#singleGen").on('click', function ()
+    {
+        DoGeneration();
     });
 
     $("#stop").on('click', function ()
@@ -58,7 +63,7 @@ function ResetBoard(height, width)
         {
             html += '<td id="c' + row + '_' + col + '" class="cell ';
             random = Math.floor(Math.random() * 10);
-            if (random < 6)
+            if (random < 7)
             {
                 html += 'dead';
                 currentBoardHasInput += "0";
