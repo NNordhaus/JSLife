@@ -1,6 +1,6 @@
 Expirimental implementation of "Conway's Game of Life", in JavaScript.
 
-You can view this in a JSFiddle here: http://jsfiddle.net/JPdrp/
+You can view this in a JSFiddle here: http://jsfiddle.net/nnordhaus/1v18fog6/4/
 
 Why the game of life?  
 
